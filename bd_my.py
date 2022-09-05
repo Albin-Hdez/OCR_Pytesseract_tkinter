@@ -8,8 +8,8 @@ try:
                              db='sed')
 	try:
 		with conexion.cursor() as cursor:
-			consulta = "INSERT INTO clientes(FOTO_INE) VALUES (%s);"
-			#Podemos llamar muchas veces a .execute con datos distintos
+			consulta = "INSERT INTO clientes(APELLIDO_P, APELLIDO_M, NOMBRES, DIRECCION, CURP, RFC, FOTO_INE, FOTO_RFC, STATUS)\
+						+VALUES (%s);"
             
 			cursor.execute(consulta, (imagen))
 		conexion.commit()
