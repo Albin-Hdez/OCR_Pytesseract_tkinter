@@ -1,8 +1,5 @@
-import tkinter as tk
-from atexit import register
 from tkinter import *
 from tkinter import ttk, font
-from webbrowser import get
 from PIL import Image, ImageTk
 from Control import Controlador
 
@@ -22,12 +19,8 @@ class Insert():
                 self.labelframe1.place(x=20, y=20)
 
                 #Id Cliente Label y Textbox
-                self.lb_Id = ttk.Label(self.registrar, text="Numero de Cliente", width=20, anchor="w")
-                self.lb_Id.place(x=25, y=40)
-
-                self.Id_Cliente = StringVar()
-                self.txt_Id_Cliente = ttk.Entry(self.registrar, textvariable=self.Id_Cliente, width=10)
-                self.txt_Id_Cliente.place(x=180, y=40)
+                self.lb_Id = ttk.Label(self.registrar, text="Seleccion de Imagenes", width=20, anchor="center")
+                self.lb_Id.place(x=100, y=40)
                 
                 #Boton para seleccionar foto de INE
                 self.btn_ine = ttk.Button(self.registrar, text='Seleccionar Foto de INE', width=44, command=Controlador.Controller_INE)
@@ -39,7 +32,7 @@ class Insert():
                 
                 #Mostrar Fotos Label y Combobox
                 self.lb_cb = ttk.Label(self.registrar, text="Mostrar INE ó RFC", width=30,anchor="center")
-                self.lb_cb.place(x=360, y=40)
+                self.lb_cb.place(x=410, y=40)
                 
                 self.cb_fotos = ttk.Combobox(self.registrar, state="readonly", values=["INE", "RFC"], width=30)
                 self.cb_fotos.current(0)
@@ -104,19 +97,39 @@ class Insert():
 
                 #Boton Escanear INE
                 img_id = PhotoImage(file="Fotos/id.png")
-                self.btn_guardar = ttk.Button(self.registrar, text="Escanear INE",image=img_id, compound = TOP, command=Controlador.Controller_Scan_INE)
+                self.btn_guardar = ttk.Button(self.registrar, text="Escanear INE",image=img_id, compound = TOP, command=self.rellena_INE)
                 self.btn_guardar.place(x=420, y=250, width=100, height=100)
 
                 #Boton Escanear RFC
                 image_doc = PhotoImage(file="Fotos/doc.png")
-                self.btn_guardar = ttk.Button(self.registrar, text="Escanear RFC",image=image_doc, compound = TOP)
+                self.btn_guardar = ttk.Button(self.registrar, text="Escanear RFC",image=image_doc, compound = TOP, command=self.SCAN_RFC)
                 self.btn_guardar.place(x=530, y=250, width=100, height=100)
+                
                 #Boton REGISTRAR
-
-                self.btn_guardar = ttk.Button(self.registrar, text="Registrar Cliente", compound = LEFT, command=self.datos)
+                self.btn_guardar = ttk.Button(self.registrar, text="Registrar Cliente", compound = LEFT, command=self.INSERT)
                 self.btn_guardar.place(x=420, y=360, width=210, height=40)
         
-        def datos(self):
+        def rellena_INE(self):
                 DATOS = Controlador.Controller_Scan_INE()
-                print(DATOS)
-                self.Ape1.set("juas juas")
+                self.txt_Ape1.insert(0, DATOS[0])
+                self.txt_Ape2.insert(0, DATOS[1])
+                self.txt_nom.insert(0, DATOS[2])
+                self.txt_dir.insert(0, DATOS[3])
+                self.txt_curp.insert(0 ,DATOS[4])
+
+        def INSERT(self):
+                ARRAY_DATOS = []
+
+                APELLIDO_P = self.txt_Ape1.get()
+                APELLIDO_M = self.txt_Ape2.get()
+                NOMBRES = self.txt_nom.get()
+                DIRECCION = self.txt_dir.get()
+                CURP = self.txt_curp.get()
+                RFC = self.txt_rfc.get()
+                
+                ARRAY_DATOS = [APELLIDO_P, APELLIDO_M, NOMBRES, DIRECCION, CURP, RFC]
+
+                Controlador.INSERT(ARRAY_DATOS)
+
+        def SCAN_RFC(self):
+                Controlador.SELECT_ALL()

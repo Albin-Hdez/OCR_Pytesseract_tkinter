@@ -1,3 +1,6 @@
+from asyncio.windows_events import NULL
+from pickle import GLOBAL
+from zlib import DEF_BUF_SIZE
 import pymysql
 import easygui
 import cv2
@@ -6,7 +9,7 @@ import pytesseract
 from PIL import Image
 class Modelo:
     INE = ''
-    RFC = ''
+    Foto_RFC = ''
 
     def Select_INE():
         global INE
@@ -19,7 +22,7 @@ class Modelo:
     
     def Muestra_img(tipo):
         global INE
-        global RFC
+        global Foto_RFC
 
         valor = 'INE'
         try:
@@ -99,17 +102,98 @@ class Modelo:
         #FN = str.split(arr[3])
 
         x = len(Nombre)
-        print(x)
+        #print(x)
         if x==4:
             INSERT=[Nombre[0],Nombre[1],Nombre[2]+' '+Nombre[3], dir, CURP[0]]
             #print(INSERT)
             Nombres = str(Nombre[2]+' '+Nombre[3])
-            ARRAY_DATOS = [Nombre[0],Nombre[1],Nombres, dir, CURP[0]]
-            return ARRAY_DATOS
-            #BD.insert(Nombre[0],Nombre[1],Nombres, dir, CURP[0])
+            return [Nombre[0],Nombre[1],Nombres, dir, CURP[0]]
+
         if x==3:
             INSERT=[Nombre[0],Nombre[1],Nombre[2], dir, CURP[0]]
             #print(INSERT)
             ARRAY_DATOS = [Nombre[0],Nombre[1],Nombre[2], dir, CURP[0]]
             return ARRAY_DATOS
-            #BD.insert(Nombre[0],Nombre[1],Nombre[2], dir, CURP[0])
+
+    def Valida_INE(CURP):
+        print(CURP)
+
+    def Conexion():
+        try:
+            conexion = pymysql.connect(host='localhost',
+                                    user='root',
+                                    password='',
+                                    db='sed')
+            print("Conectado con exito")
+            return conexion
+        except (pymysql.err.OperationalError, pymysql.err.InternalError) as e:
+                        print("Ocurrió un error al conectar: ", e)
+    
+    def INSERT(DATOS):
+        
+        APELLIDO_P = DATOS[0]
+        APELLIDO_M = DATOS[1]
+        NOMBRES    = DATOS[2]
+        DIRECCION  = DATOS[3]
+        CURP       = DATOS[4]
+        RFC        = DATOS[5]
+        global INE
+        global Foto_RFC
+        STATUS = 1
+
+        conexion_sql = Modelo.Conexion()
+        cursor = conexion_sql.cursor()
+        consulta = "INSERT INTO clientes(APELLIDO_P, APELLIDO_M, NOMBRES, DIRECCION, CURP, RFC, FOTO_INE, FOTO_RFC, STATUS) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s);"
+
+        if len(RFC) == 0:
+            
+            Foto_RFC = None
+            RFC = "PENDIENTE"
+
+            cursor.execute(consulta, (APELLIDO_P, APELLIDO_M, NOMBRES, DIRECCION, CURP, RFC, INE, Foto_RFC, STATUS))
+            print(Foto_RFC)
+
+        else:
+            cursor.execute(consulta, (APELLIDO_P, APELLIDO_M, NOMBRES, DIRECCION, CURP, RFC, INE, Foto_RFC, STATUS))
+
+            print("todo bien")
+    
+    def Select_all():
+        conexion_sql = Modelo.Conexion()
+        cursor = conexion_sql.cursor()
+        consulta = "select * from clientes;"
+
+        cursor.execute(consulta)
+        
+        rows = cursor.fetchall()
+
+        return rows
+ 
+    def Buscar(cadena, tipo):
+        conexion_sql = Modelo.Conexion()
+        cursor = conexion_sql.cursor()
+
+        nombre = "Nombre"
+        ape = "Apellido"
+        curp = "CURP"
+        rfc = "RFC"
+        id = "ID"
+        consulta = ""
+
+        if tipo == nombre:
+            consulta = "select * from clientes where NOMBRES LIKE %s;"
+        elif tipo == ape:
+            consulta = "select * from clientes where APELLIDO_P LIKE %s;"
+        elif tipo == curp:
+            consulta = "select * from clientes where CURP LIKE %s;"
+        elif tipo == rfc:
+            consulta = "select * from clientes where RFC LIKE %s;"
+        elif tipo == id:
+            consulta = "select * from clientes where id= %s;"
+        
+        print(consulta)
+        print(cadena)
+        cursor.execute(consulta, (cadena))
+        rows = cursor.fetchall()
+        return rows
+        

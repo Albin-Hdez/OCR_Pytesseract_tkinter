@@ -15,5 +15,16 @@ class Controlador:
         print(valor)
 
     def Controller_Scan_INE():
-        Modelo.Modelo.Scan_INE()
+        DATOS = Modelo.Modelo.Scan_INE()
+        return DATOS
+    
+    def INSERT(ARRAY_DATOS):
+        Modelo.Modelo.INSERT(ARRAY_DATOS)
 
+    def SELECT_ALL():
+        DATOS = Modelo.Modelo.Select_all()
+        return DATOS
+    def Buscar(cadena, tipo):
+        DATOS = Modelo.Modelo.Buscar(cadena, tipo)
+        return DATOS
+       
