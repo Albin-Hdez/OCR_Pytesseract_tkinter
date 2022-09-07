@@ -96,13 +96,13 @@ class Insert():
                 self.txt_rfc.place(x=220, y=360)
 
                 #Boton Escanear INE
-                img_id = PhotoImage(file="Fotos/id.png")
-                self.btn_guardar = ttk.Button(self.registrar, text="Escanear INE",image=img_id, compound = TOP, command=self.rellena_INE)
+                self.img_id = PhotoImage(file="Fotos/id.png")
+                self.btn_guardar = ttk.Button(self.registrar, text="Escanear INE",image=self.img_id, compound = TOP, command=self.rellena_INE)
                 self.btn_guardar.place(x=420, y=250, width=100, height=100)
 
                 #Boton Escanear RFC
-                image_doc = PhotoImage(file="Fotos/doc.png")
-                self.btn_guardar = ttk.Button(self.registrar, text="Escanear RFC",image=image_doc, compound = TOP, command=self.SCAN_RFC)
+                self.image_doc = PhotoImage(file="Fotos/doc.png")
+                self.btn_guardar = ttk.Button(self.registrar, text="Escanear RFC",image=self.image_doc, compound = TOP, command=self.SCAN_RFC)
                 self.btn_guardar.place(x=530, y=250, width=100, height=100)
                 
                 #Boton REGISTRAR
@@ -129,7 +129,15 @@ class Insert():
                 
                 ARRAY_DATOS = [APELLIDO_P, APELLIDO_M, NOMBRES, DIRECCION, CURP, RFC]
 
+                self.txt_Ape1.delete(0, 'end')
+                self.txt_Ape2.delete(0, 'end')
+                self.txt_nom.delete(0, 'end')
+                self.txt_dir.delete(0, 'end')
+                self.txt_curp.delete(0, 'end')
+                self.txt_rfc.delete(0, 'end')
+
                 Controlador.INSERT(ARRAY_DATOS)
+
 
         def SCAN_RFC(self):
                 Controlador.SELECT_ALL()

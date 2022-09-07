@@ -20,16 +20,12 @@ class OCR(tk.Frame):
 
         #Apartado Cliente
         Cliente = Menu(mi_menu, tearoff=0)
-        Cliente.add_command(label="Registrar Cliente", command=self.insertar)
         Cliente.add_command(label="Gestion Cliente", command=self.gestion_clientes)
         
         mi_menu.add_cascade(label="Clientes", menu=Cliente)
 
         self.parent.title("SISTEMA de EXTRACCION DE DATOS")
     
-    def insertar(self):
-        obj_ins = Insert()
-        obj_ins.ventana_reg()
     def gestion_clientes(self):
         ins_gc = Gestion_user()
         ins_gc.Lista()

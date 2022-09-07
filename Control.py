@@ -1,4 +1,5 @@
 import Modelo
+
 class Controlador:
     
     INE = ''
