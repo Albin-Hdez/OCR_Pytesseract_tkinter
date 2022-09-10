@@ -1,14 +1,16 @@
+from msilib import Control
 from tkinter import *
 from tkinter import ttk, font
-from PIL import Image, ImageTk
 from Control import Controlador
 
 class Edit():
-    def Pantalla_editar(self):
+    def Pantalla_editar(self, ID):
+        self.id_datos = ID
+        print(ID)
         self.ventana = Toplevel()
-        self.ventana.geometry("660x430")
+        self.ventana.geometry("340x280")
         self.ventana.resizable(width=False, height=False)
-        self.ventana.title("Registrar Cliente")
+        self.ventana.title("Editar Informacion de Cliente")
 
         #Apellido Paterno
         self.lb_ape1 = ttk.Label(self.ventana, text="Apellido Paterno: ", width=15)
@@ -17,6 +19,7 @@ class Edit():
         self.Ape1 = StringVar()
         self.txt_Ape1 = ttk.Entry(self.ventana, textvariable=self.Ape1, width=30)
         self.txt_Ape1.place(x=120, y=20)
+        
 
         #Apellido Materno
         self.lb_ape2 = ttk.Label(self.ventana, text="Apellido Materno :", width=16)
@@ -58,7 +61,46 @@ class Edit():
         self.txt_rfc = ttk.Entry(self.ventana, textvariable=self.RFC, width=30)
         self.txt_rfc.place(x=120, y=165)
 
+        self.img_guardar = PhotoImage(file="Fotos/save.png")
+        self.btn_guardar = ttk.Button(self.ventana, text="Guardar", compound=LEFT, image=self.img_guardar, command=self.modificar)
+        self.btn_guardar.place(x=168, y=200, width=140, height=40)
+        
+        self.img_up = PhotoImage(file="Fotos/upload.png")
+        self.btn_cargar = ttk.Button(self.ventana, text="Cargar", compound=LEFT, image=self.img_up, command= lambda: self.insert(self.id_datos))
+        self.btn_cargar.place(x=20, y=200, width=140, height=40)
     
-        #Background
-        #fondo = Image.open('Fotos/fondo.jpg')
-        #render_fondo = ImageTk.PhotoImage(fondo)
+    def insert(self, id):
+        
+        DATOS = Controlador.Buscar(id, "ID")
+
+        for i in DATOS:
+            ape1 = i[1]
+            ape2 = i[2]
+            nom = i[3]
+            dir = i[4]
+            curp = i[5]
+            rfc = i[6]
+
+        print(ape1)
+        self.txt_Ape1.insert(0, ape1)
+        self.txt_Ape2.insert(0,  ape2)
+        self.txt_nom.insert(0,  nom)
+        self.txt_dir.insert(0, dir)
+        self.txt_curp.insert(0, curp)
+        self.txt_rfc.insert(0, rfc)
+    
+    def modificar(self):
+        
+        ARRAY_DATOS = []
+
+        APELLIDO_P = self.txt_Ape1.get()
+        APELLIDO_M = self.txt_Ape2.get()
+        NOMBRES = self.txt_nom.get()
+        DIRECCION = self.txt_dir.get()
+        CURP = self.txt_curp.get()
+        RFC = self.txt_rfc.get()
+                
+        ARRAY_DATOS = [self.id_datos ,APELLIDO_P, APELLIDO_M, NOMBRES, DIRECCION, CURP, RFC]
+        Controlador.modificar(ARRAY_DATOS)
+        #print(ARRAY_DATOS)
+
