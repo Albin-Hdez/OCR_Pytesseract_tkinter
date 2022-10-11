@@ -10,7 +10,7 @@ class Gestion_user():
     def Lista(self):
         
         self.Pantalla = Toplevel()
-        self.Pantalla.geometry("1050x400")
+        self.Pantalla.geometry("1275x400")
         self.Pantalla.resizable(width=False, height=False)
         self.Pantalla.title("Gestion de Clientes")
 
@@ -52,11 +52,11 @@ class Gestion_user():
 
         #Boton Eliminar
         self.img_del = PhotoImage(file="Fotos/bin.png")
-        self.btn_del = ttk.Button(self.Pantalla, text="Eliminar", image=self.img_del,compound=LEFT)
+        self.btn_del = ttk.Button(self.Pantalla, text="Eliminar", image=self.img_del,compound=LEFT, command=self.Eliminar)
         self.btn_del.place(x=780, y=20, width=100, height=40)
 
         # Tabla
-        self.tabla = ttk.Treeview(self.Pantalla, columns=(1,2,3,4,5,6,7,8), show='headings', height=8)
+        self.tabla = ttk.Treeview(self.Pantalla, columns=(1,2,3,4,5,6,7,8,9), show='headings', height=8)
         self.tabla.place(x=20, y=80, height=300)
         # self.tabla.grid(row=4,column=0,columnspan=0)
 
@@ -64,23 +64,26 @@ class Gestion_user():
         self.tabla.column("2", width=150)
         self.tabla.column("3", width=150)
         self.tabla.column("4", width=150)
-        self.tabla.column("5", width=200)
+        self.tabla.column("5", width=150)
         self.tabla.column("6", width=150)
         self.tabla.column("7", width=150)
-        self.tabla.column("8", width=10)
+        self.tabla.column("8", width=150)
+        self.tabla.column("9", width=150)
 
         self.tabla.heading("1",text="ID")
         self.tabla.heading("2",text="APELLIDO PATERNO")
         self.tabla.heading("3",text="APELLIDO MATERNO")
         self.tabla.heading("4",text="NOMBRE")
         self.tabla.heading("5",text="DIRECION")
-        self.tabla.heading("6",text="CURP")
-        self.tabla.heading("7",text="RFC")
-        self.tabla.heading("8",text="STATUS")
+        self.tabla.heading("6",text="FECHA DE NACIMIENTO")   
+        self.tabla.heading("7",text="CURP")
+        self.tabla.heading("8",text="VIGENCIA INE")
+        self.tabla.heading("9",text="RFC")
+
         #self.tabla.pack()
 
         self.sb = Scrollbar(self.Pantalla, orient=VERTICAL)
-        self.sb.place(x=1050, y=80)
+        self.sb.place(x=1300, y=80)
 
         self.tabla.config(yscrollcommand=self.sb.set)
         self.sb.config(command=self.tabla.yview)
@@ -92,7 +95,7 @@ class Gestion_user():
             self.tabla.delete(e)
         
         for i in DATOS:
-            self.tabla.insert("", END, values=(i[0], i[1], i[2], i[3], i[4], i[5], i[6], i[9]))
+            self.tabla.insert("", END, values=(i[0], i[1], i[2], i[3], i[4], i[5], i[6], i[7], i[8]))
     
     def Buscar(self, cadena, tipo):
         DATOS = Controlador.Buscar(cadena, tipo)
@@ -101,12 +104,31 @@ class Gestion_user():
             self.tabla.delete(e)
         
         for i in DATOS:
-            self.tabla.insert("", END, values=(i[0], i[1], i[2], i[3], i[4], i[5], i[6], i[9]))
+            self.tabla.insert("", END, values=(i[0], i[1], i[2], i[3], i[4], i[5], i[6], i[7], i[8]))
 
     #Funciones Botones
     def insertar(self):
         ins = Insert()
         ins.ventana_reg()
+    
     def editar(self):
+
+        item = self.tabla.focus()
+        id_item = self.tabla.item(item)
+        id = id_item.get("values")[0]
+
         ins = Edit()
-        ins.Pantalla_editar()
+        ins.Pantalla_editar(id)
+
+    def Eliminar(self):
+        item = self.tabla.focus()
+        id_item = self.tabla.item(item)
+        id = id_item.get("values")[0]
+        
+        ins = Controlador.Eliminar(id)
+
+        self.Listar()
+
+
+
+

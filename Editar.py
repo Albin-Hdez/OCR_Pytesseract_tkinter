@@ -37,37 +37,46 @@ class Edit():
         self.txt_nom = ttk.Entry(self.ventana, textvariable=self.Nom, width=30)
         self.txt_nom.place(x=120, y=70)
 
-        #Direccion
-        self.lb_dir = ttk.Label(self.ventana, text="Direccion", width=15)
-        self.lb_dir.place(x=20, y=95)
+        #Nombre Completo
+        self.lb_nc = ttk.Label(self.ventana, text="Nombre Completo", width=15, wraplength=55)
+        self.lb_nc.place(x=20, y=95)
                 
-        self.Dir = StringVar()
-        self.txt_dir = ttk.Entry(self.ventana, textvariable=self.Dir, width=42)
-        self.txt_dir.place(x=120, y=95, width=185, height=42)
+        self.nc = StringVar()
+        self.txt_nc = ttk.Entry(self.ventana, textvariable=self.nc, width=42)
+        self.txt_nc.place(x=120, y=95, width=185, height=42)
+
+        #Direccion
+        self.lb_dir = ttk.Label(self.ventana, text="Dirección", width=15)
+        self.lb_dir.place(x=20, y=140)
+                
+        self.dir = StringVar()
+        self.txt_dir = ttk.Entry(self.ventana, textvariable=self.dir, width=30)
+        self.txt_dir.place(x=120, y=140)
 
         #CURP
         self.lb_curp = ttk.Label(self.ventana, text="CURP", width=15)
-        self.lb_curp.place(x=20, y=140)
+        self.lb_curp.place(x=20, y=165)
                 
         self.CURP = StringVar()
         self.txt_curp = ttk.Entry(self.ventana, textvariable=self.CURP, width=30)
-        self.txt_curp.place(x=120, y=140)
+        self.txt_curp.place(x=120, y=165)
 
         #RFC
         self.lb_curp = ttk.Label(self.ventana, text="RFC", width=15)
-        self.lb_curp.place(x=20, y=165)
+        self.lb_curp.place(x=20, y=190)
                 
         self.RFC = StringVar()
         self.txt_rfc = ttk.Entry(self.ventana, textvariable=self.RFC, width=30)
-        self.txt_rfc.place(x=120, y=165)
+        self.txt_rfc.place(x=120, y=190)
 
+        #Botones
         self.img_guardar = PhotoImage(file="Fotos/save.png")
         self.btn_guardar = ttk.Button(self.ventana, text="Guardar", compound=LEFT, image=self.img_guardar, command=self.modificar)
-        self.btn_guardar.place(x=168, y=200, width=140, height=40)
+        self.btn_guardar.place(x=168, y=215, width=140, height=40)
         
         self.img_up = PhotoImage(file="Fotos/upload.png")
         self.btn_cargar = ttk.Button(self.ventana, text="Cargar", compound=LEFT, image=self.img_up, command= lambda: self.insert(self.id_datos))
-        self.btn_cargar.place(x=20, y=200, width=140, height=40)
+        self.btn_cargar.place(x=20, y=215, width=140, height=40)
     
     def insert(self, id):
         
@@ -77,14 +86,16 @@ class Edit():
             ape1 = i[1]
             ape2 = i[2]
             nom = i[3]
-            dir = i[4]
-            curp = i[5]
-            rfc = i[6]
+            nc = i[4]
+            dir = i[5]
+            curp = i[6]
+            rfc = i[7]
 
         print(ape1)
         self.txt_Ape1.insert(0, ape1)
         self.txt_Ape2.insert(0,  ape2)
         self.txt_nom.insert(0,  nom)
+        self.txt_nc.insert(0, nc)
         self.txt_dir.insert(0, dir)
         self.txt_curp.insert(0, curp)
         self.txt_rfc.insert(0, rfc)
@@ -96,11 +107,12 @@ class Edit():
         APELLIDO_P = self.txt_Ape1.get()
         APELLIDO_M = self.txt_Ape2.get()
         NOMBRES = self.txt_nom.get()
+        NOMBRE_C = self.txt_nc.get()
         DIRECCION = self.txt_dir.get()
         CURP = self.txt_curp.get()
         RFC = self.txt_rfc.get()
                 
-        ARRAY_DATOS = [self.id_datos ,APELLIDO_P, APELLIDO_M, NOMBRES, DIRECCION, CURP, RFC]
+        ARRAY_DATOS = [self.id_datos ,APELLIDO_P, APELLIDO_M, NOMBRES, NOMBRE_C, DIRECCION, CURP, RFC]
         Controlador.modificar(ARRAY_DATOS)
-        #print(ARRAY_DATOS)
+        print("EDITADO CON EXITO")
 

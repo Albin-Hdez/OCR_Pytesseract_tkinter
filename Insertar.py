@@ -1,143 +1,306 @@
 from tkinter import *
-from tkinter import ttk, font
-from PIL import Image, ImageTk
+from tkinter import ttk
+import tkinter as tk
 from Control import Controlador
-
+from tkinter import messagebox
 class Insert():
         def ventana_reg(self):
                 self.registrar = Toplevel()
-                self.registrar.geometry("660x430")
+                self.registrar.geometry("420x430")
                 self.registrar.resizable(width=False, height=False)
                 self.registrar.title("Registrar Cliente")
                 #Background
-                fondo = Image.open('Fotos/fondo.jpg')
-                render_fondo = ImageTk.PhotoImage(fondo)
-                Label(self.registrar, image=render_fondo).pack(anchor="nw")
+                #fondo = Image.open('Fotos/fondo.jpg')
+                #render_fondo = ImageTk.PhotoImage(fondo)
+                #Label(self.registrar, image=render_fondo).pack(anchor="nw")
 
-                #Labelframe Datos Personales
-                self.labelframe1 = LabelFrame(self.registrar, text="INE y RFC", width=625, height=150)
-                self.labelframe1.place(x=20, y=20)
+                #NOTEBOOK
+                self.notebook = ttk.Notebook(self.registrar)
+                self.notebook.place(x=0, y=0)
 
-                #Id Cliente Label y Textbox
-                self.lb_Id = ttk.Label(self.registrar, text="Seleccion de Imagenes", width=20, anchor="center")
-                self.lb_Id.place(x=100, y=40)
+                # Crea frames
+                self.frame1 = ttk.Frame(self.notebook, width=420, height=430)
+                self.frame2 = ttk.Frame(self.notebook, width=420, height=430)
+
+                self.frame1.pack(fill='both', expand=True)
+                self.frame2.pack(fill='both', expand=True)
                 
+                #--------------------------------------Empieza frame 1-------------------------------------
+                #Labelframe Datos Personales
+                self.labelframe1 = LabelFrame(self.frame1, text="Seleccion de Imagene", width=400, height=100)
+                self.labelframe1.place(x=10, y=10)
+
                 #Boton para seleccionar foto de INE
-                self.btn_ine = ttk.Button(self.registrar, text='Seleccionar Foto de INE', width=44, command=Controlador.Controller_INE)
-                self.btn_ine.place(x=25, y=70, width=275, height=40)
+                self.btn_ine = tk.Button(self.frame1, text='Seleccionar INE', width=44,bg="#DCD7D7", command=self.Selecciona_INE)
+                self.btn_ine.place(x=40, y=40, width=160, height=40)
 
                 #Boton para seleccionar foto de RFC
-                self.btn_rfc = ttk.Button(self.registrar, text='Seleccionar Foto de RFC', width=44, command=Controlador.Controller_RFC)
-                self.btn_rfc.place(x=25, y=120, width=275, height=40)
-                
-                #Mostrar Fotos Label y Combobox
-                self.lb_cb = ttk.Label(self.registrar, text="Mostrar INE ó RFC", width=30,anchor="center")
-                self.lb_cb.place(x=410, y=40)
-                
-                self.cb_fotos = ttk.Combobox(self.registrar, state="readonly", values=["INE", "RFC"], width=30)
-                self.cb_fotos.current(0)
-                self.cb_fotos.place(x=360, y=70, width=275, height=40)
+                self.btn_rfc = tk.Button(self.frame1, text='Seleccionar RFC', width=44,bg="#DCD7D7", command=self.Selecciona_RFC)
+                self.btn_rfc.place(x=220, y=40, width=160, height=40)
 
-                #Boton Mostrar
-                img_save = PhotoImage(file="Fotos/save.png")
-                self.btn_guardar = ttk.Button(self.registrar, text="Mostrar Imagenes",compound = LEFT, command=lambda: Controlador.Controller_img(self.cb_fotos.get()))
-                self.btn_guardar.place(x=360, y=120, width=275, height=40)
-                
-                #Labelframe Datos Personales
-                self.labelframe3 = LabelFrame(self.registrar, text="Datos Personales", width=625, height=245)
-                self.labelframe3.place(x=20, y=170)
+                #Labelframe escaneo
+                self.labelframe1 = LabelFrame(self.frame1, text="Escaneo de Datos", width=400, height=200)
+                self.labelframe1.place(x=10, y=120)
 
-                #Apellido Paterno
-                self.lb_ape1 = ttk.Label(self.registrar, text="Apellido Paterno", width=15)
-                self.lb_ape1.place(x=25, y=190)
-                
-                self.Ape1 = StringVar()
-                self.txt_Ape1 = ttk.Entry(self.registrar, textvariable=self.Ape1, width=30)
-                self.txt_Ape1.place(x=25, y=220)
+                #Boton Escanear Nombre
+                self.btn_nombre = tk.Button(self.frame1, text="Escanear Nombre", bg="#DCD7D7", compound = TOP, command=self.scan_Nombre)
+                self.btn_nombre.place(x=40, y=140, width=160, height=40)
 
-                #Apellido Materno
-                self.lb_ape2 = ttk.Label(self.registrar, text="Apellido Materno", width=15)
-                self.lb_ape2.place(x=220, y=190)
-                
-                Ape2 = StringVar()
-                self.txt_Ape2 = ttk.Entry(self.registrar, textvariable=Ape2, width=30)
-                self.txt_Ape2.place(x=220, y=220)
+                #Boton Escanear Direccion
+                self.btn_dir = tk.Button(self.frame1, text="Escanear Direccion", bg="#DCD7D7", compound=LEFT, command=self.scan_dir)
+                self.btn_dir.place(x=220, y=140, width=160, height=40)
 
-                #Nombre
-                self.lb_nom = ttk.Label(self.registrar, text="Nombre(s)", width=15)
-                self.lb_nom.place(x=420, y=190)
-                
-                self.Nom = StringVar()
-                self.txt_nom = ttk.Entry(self.registrar, textvariable=self.Nom, width=34)
-                self.txt_nom.place(x=420, y=220)
-
-                #Direccion
-                self.lb_dir = ttk.Label(self.registrar, text="Direccion", width=15)
-                self.lb_dir.place(x=25, y=250)
-                
-                self.Dir = StringVar()
-                self.txt_dir = ttk.Entry(self.registrar, textvariable=self.Dir, width=42)
-                self.txt_dir.place(x=25, y=280, width=382, height=42)
-
-                #CURP
-                self.lb_curp = ttk.Label(self.registrar, text="CURP", width=15)
-                self.lb_curp.place(x=25, y=330)
-                
-                self.CURP = StringVar()
-                self.txt_curp = ttk.Entry(self.registrar, textvariable=self.CURP, width=30)
-                self.txt_curp.place(x=25, y=360)
-
-                #RFC
-                self.lb_curp = ttk.Label(self.registrar, text="RFC", width=15)
-                self.lb_curp.place(x=220, y=330)
-                
-                self.RFC = StringVar()
-                self.txt_rfc = ttk.Entry(self.registrar, textvariable=self.RFC, width=30)
-                self.txt_rfc.place(x=220, y=360)
-
-                #Boton Escanear INE
-                self.img_id = PhotoImage(file="Fotos/id.png")
-                self.btn_guardar = ttk.Button(self.registrar, text="Escanear INE",image=self.img_id, compound = TOP, command=self.rellena_INE)
-                self.btn_guardar.place(x=420, y=250, width=100, height=100)
+                #Boton Escanear CURP
+                self.btn_curp = tk.Button(self.frame1, text="Escanear CURP", bg="#DCD7D7", compound=LEFT, command=self.scan_CURP)
+                self.btn_curp.place(x=40, y=200, width=160, height=40)
 
                 #Boton Escanear RFC
-                self.image_doc = PhotoImage(file="Fotos/doc.png")
-                self.btn_guardar = ttk.Button(self.registrar, text="Escanear RFC",image=self.image_doc, compound = TOP, command=self.SCAN_RFC)
-                self.btn_guardar.place(x=530, y=250, width=100, height=100)
+                self.btn_srfc = tk.Button(self.frame1, text="Escanear RFC", bg="#DCD7D7", compound = TOP, command=self.rellena_RFC)
+                self.btn_srfc.place(x=220, y=200, width=160, height=40)
                 
-                #Boton REGISTRAR
-                self.btn_guardar = ttk.Button(self.registrar, text="Registrar Cliente", compound = LEFT, command=self.INSERT)
-                self.btn_guardar.place(x=420, y=360, width=210, height=40)
-        
-        def rellena_INE(self):
-                DATOS = Controlador.Controller_Scan_INE()
-                self.txt_Ape1.insert(0, DATOS[0])
-                self.txt_Ape2.insert(0, DATOS[1])
-                self.txt_nom.insert(0, DATOS[2])
-                self.txt_dir.insert(0, DATOS[3])
-                self.txt_curp.insert(0 ,DATOS[4])
+                #Boton Escanear Fecha de Nacimiento
+                self.btn_fn = tk.Button(self.frame1, text="Fecha de Nacimiento", bg="#DCD7D7", compound = TOP, command=self.scan_Fecha_Nac)
+                self.btn_fn.place(x=40, y=260, width=160, height=40)
 
+                #Boton Escanear vigencia
+                self.btn_vig = tk.Button(self.frame1, text="Vigencia INE", bg="#DCD7D7", compound = TOP, command=self.scan_vigencia)
+                self.btn_vig.place(x=220, y=260, width=160, height=40)
+
+                #--------------------------------------Acaba frame 1----------------------------------------------------------------
+                #--------------------------------------Empieza frame 2--------------------------------------------------------------
+                # Añade frames al notebook
+
+                #Apellido Paterno
+                self.lb_ape1 = ttk.Label(self.frame2, text="Apellido Paterno", width=15)
+                self.lb_ape1.place(x=20, y=20)
+
+                self.Ape1 = StringVar()
+                self.txt_Ape1 = ttk.Entry(self.frame2, textvariable=self.Ape1, width=30)
+                self.txt_Ape1.place(x=150, y=20)
+
+                #Apellido Materno
+                self.lb_ape2 = ttk.Label(self.frame2, text="Apellido Materno", width=15)
+                self.lb_ape2.place(x=20, y=50)
+                
+                Ape2 = StringVar()
+                self.txt_Ape2 = ttk.Entry(self.frame2, textvariable=Ape2, width=30)
+                self.txt_Ape2.place(x=150, y=50)
+
+                #Nombre
+                self.lb_nom = ttk.Label(self.frame2, text="Nombre(s)", width=15)
+                self.lb_nom.place(x=20, y=80)
+                
+                self.Nom = StringVar()
+                self.txt_nom = ttk.Entry(self.frame2, textvariable=self.Nom, width=30)
+                self.txt_nom.place(x=150, y=80)
+                #Fecha Nacimiento
+                self.lb_fn = ttk.Label(self.frame2, text="Fecha de Nacimiento", width=30)
+                self.lb_fn.place(x=20, y=110)
+
+                self.FN = StringVar()
+                self.txt_fn = ttk.Entry(self.frame2, textvariable=self.FN, width=30)
+                self.txt_fn.place(x=150, y=110)
+                #Nombre Completo
+                self.lb_NC = ttk.Label(self.frame2, text="Nombre Completo", width=30)
+                self.lb_NC.place(x=20, y=140)
+
+                self.NC = StringVar()
+                self.txt_NC = tk.Text(self.frame2, width=23, height=3)
+                self.txt_NC.place(x=150, y=140)
+
+                #Direccion
+                self.lb_dir = ttk.Label(self.frame2, text="Direccion", width=15)
+                self.lb_dir.place(x=20, y=200)
+                
+                self.Dir = StringVar()
+                self.txt_dir = tk.Text(self.frame2, width=23, height=3)
+                self.txt_dir.place(x=150, y=200)
+
+                #CURP
+                self.lb_curp = ttk.Label(self.frame2, text="CURP", width=15)
+                self.lb_curp.place(x=20, y=260)
+                
+                self.CURP = StringVar()
+                self.txt_curp = ttk.Entry(self.frame2, textvariable=self.CURP, width=30)
+                self.txt_curp.place(x=150, y=260)
+
+                #RFC
+                self.lb_curp = ttk.Label(self.frame2, text="RFC", width=15)
+                self.lb_curp.place(x=20, y=290)
+                
+                self.RFC = StringVar()
+                self.txt_rfc = ttk.Entry(self.frame2, textvariable=self.RFC, width=30)
+                self.txt_rfc.place(x=150, y=290)
+
+                #Vigencia
+                self.lb_vig = ttk.Label(self.frame2, text="Vigencia", width=15)
+                self.lb_vig.place(x=20, y=320)
+
+                self.vig = StringVar()
+                self.txt_vig = ttk.Entry(self.frame2, textvariable=self.vig, width=30)
+                self.txt_vig.place(x=150, y=320)
+
+                #Boton REGISTRAR
+                self.img_guardar = PhotoImage(file="Fotos/save.png")
+                self.btn_guardar = ttk.Button(self.frame2, image=self.img_guardar, text="Registrar Cliente", compound = LEFT, command=self.INSERT)
+                self.btn_guardar.place(x=100, y=360, width=200, height=40)
+
+                #--------------------------------------Acaba frame 2--------------------------------------------------------------
+                self.notebook.add(self.frame1, text='ESCANEO')
+                self.notebook.add(self.frame2, text='DATOS')
+
+        def Selecciona_INE(self):
+                Controlador.Controller_INE()
+                self.btn_ine.configure(bg="green")
+        def Selecciona_RFC(self):
+                Controlador.Controller_RFC()
+                self.btn_rfc.configure(bg="green")
         def INSERT(self):
                 ARRAY_DATOS = []
 
                 APELLIDO_P = self.txt_Ape1.get()
                 APELLIDO_M = self.txt_Ape2.get()
                 NOMBRES = self.txt_nom.get()
-                DIRECCION = self.txt_dir.get()
+                NOMBRE_C = self.txt_NC.get("1.0", END)
+                DIRECCION = self.txt_dir.get("1.0", END)
+                FECHA_N = self.txt_fn.get()
                 CURP = self.txt_curp.get()
+                VIGENCIA = self.txt_vig.get()
                 RFC = self.txt_rfc.get()
                 
-                ARRAY_DATOS = [APELLIDO_P, APELLIDO_M, NOMBRES, DIRECCION, CURP, RFC]
+                DIRECCION = str.split(DIRECCION)
+                DIRECCION2 = ""
+                DIRECCION2=' '.join([str(elem) for elem in DIRECCION])
+                
+                ARRAY_DATOS = [APELLIDO_P, APELLIDO_M, NOMBRES, NOMBRE_C, DIRECCION2, FECHA_N, CURP, VIGENCIA,RFC]
 
                 self.txt_Ape1.delete(0, 'end')
                 self.txt_Ape2.delete(0, 'end')
                 self.txt_nom.delete(0, 'end')
-                self.txt_dir.delete(0, 'end')
+                self.txt_NC.delete("1.0", END)
+                self.txt_dir.delete("1.0", END)
+                self.txt_fn.delete(0, 'end')
                 self.txt_curp.delete(0, 'end')
+                self.txt_vig.delete(0, 'end')
                 self.txt_rfc.delete(0, 'end')
 
                 Controlador.INSERT(ARRAY_DATOS)
 
 
-        def SCAN_RFC(self):
-                Controlador.SELECT_ALL()
+        def rellena_RFC(self):
+                RFC = Controlador.Controller_Scan_RFC()
+                self.txt_rfc.insert(0 , RFC)
+                self.btn_srfc.configure(bg="green")
+        def scan_Nombre(self):                
+                Nom = Controlador.Controller_Scan()
+
+                #Array con el nombre en diferentes posiciones
+                Nombre = str.split(Nom)
+                print(Nombre)
+                
+                #Separar Nombres y juntarlos en un string
+                x = len(Nombre)
+                if x==4:
+                        Nom_u = str(Nombre[2]+' '+Nombre[3])
+
+                self.txt_Ape1.insert(0, Nombre[0])
+                self.txt_Ape2.insert(0, Nombre[1])
+                self.txt_nom.insert(0, Nom_u)
+                self.txt_NC.insert(tk.INSERT, Nombre)
+                self.btn_nombre.configure(bg="green")
+        def scan_dir(self):
+                Direccion = Controlador.Controller_Scan()
+                
+                arr_dir = []
+                dir=''
+                for i in Direccion:
+                        if i in ['.']:
+                                #arr_dir.append(i)
+                                dir=dir+i
+                                break
+                        if i in ['\n']:
+                                i=', '
+                                #arr_dir.append(i)
+                                dir=dir+i
+                        else:
+                                #arr_dir.append(i)
+                                dir=dir+i
+
+                dir = str.split(dir)
+                print(dir)
+                self.txt_dir.insert(tk.INSERT, dir)
+                self.btn_dir.configure(bg="green")
+        def scan_CURP(self):
+                curp = Controlador.Controller_Scan()
+                curp2 = str.split(curp)
+                
+                print(curp2)
+
+                curp3 = list(curp)
+                print(curp3)
+                try:
+                        if self.año <= 2000:
+                                print("Abajo de 2000")
+                                if curp3[16] in "O":
+                                        curp3[16] = "0"
+                                if curp3[16] in "I":
+                                        curp3[16] = "1"
+                                if curp3[16] in "T":
+                                        curp3[16] = "7"
+                                if len(curp3) >=18:
+                                        curp3.pop()
+                        if self.año >= 2000:
+                                print("Arriba de 2000")
+                except AttributeError:
+                        messagebox.showinfo("Fecha de Nacimiento necesaria","Es necesario primero escanear la fecha de nacimiento")
+                        return
+                curp2 = ""
+
+                for i in curp3:
+                        curp2 = curp2+i
+
+                self.txt_curp.insert(0, curp2)
+                self.btn_curp.configure(bg="green")
+        
+        def scan_Fecha_Nac(self):
+                FN = Controlador.Controller_Scan()
+                Array_Fecha = []
+                Fecha_corregida = []
+                Fecha_final = ""
+                x = 0
+                for i in FN:
+                        if i in ['\n']:
+                                continue
+                        if i in ['/']:
+                                Array_Fecha.append("-")
+                        else:
+                                Array_Fecha.append(i)
+
+                #año
+                Fecha_corregida.append(Array_Fecha[6])
+                Fecha_corregida.append(Array_Fecha[7])
+                Fecha_corregida.append(Array_Fecha[8])
+                Fecha_corregida.append(Array_Fecha[9])
+                #mes
+                Fecha_corregida.append(Array_Fecha[2])
+                Fecha_corregida.append(Array_Fecha[3])
+                Fecha_corregida.append(Array_Fecha[4])
+                #dia
+                Fecha_corregida.append(Array_Fecha[5])
+                Fecha_corregida.append(Array_Fecha[0])
+                Fecha_corregida.append(Array_Fecha[1])
+
+                for i in Fecha_corregida:
+                        Fecha_final = Fecha_final+i
+
+                self.año = Fecha_corregida[0]+Fecha_corregida[1]+Fecha_corregida[2]+Fecha_corregida[3]
+                self.año = int(self.año)
+                
+                self.txt_fn.insert(0, Fecha_final)
+                self.btn_fn.configure(bg="green")
+
+        def scan_vigencia(self):
+                vig = Controlador.Controller_Scan()
+                vig = str.split(vig)
+                self.txt_vig.insert(0, vig)
+                self.btn_vig.configure(bg="green")
